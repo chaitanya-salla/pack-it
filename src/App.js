@@ -1,25 +1,42 @@
-import { useState } from "react";
-
-const initialItems = [
-  { id: 1, description: "Passports", quantity: 1, packed: false },
-  { id: 2, description: "Socks", quantity: 12, packed: false },
-  { id: 3, description: "Charger", quantity: 1, packed: false },
-  { id: 4, description: "Laptop", quantity: 1, packed: true },
-  { id: 5, description: "Clothes", quantity: 12, packed: false },
-  { id: 6, description: "Inner Ware", quantity: 5, packed: false },
-];
+import { useEffect, useState } from "react";
 
 function App() {
   const [itemsList, setItemsList] = useState([]);
+
+  useEffect(() => {
+    const storedItems = JSON.parse(localStorage.getItem("itemsList"));
+    setItemsList(storedItems);
+  }, []);
+
   const addItemHandler = (item) => {
-    const updatedItems = [...itemsList, item];
-    setItemsList(updatedItems);
+    const addedItems = [...itemsList, item];
+    setItemsList(addedItems);
+    localStorage.setItem("itemsList", JSON.stringify(addedItems));
+  };
+
+  const deleteItemHandler = (id) => {
+    const deletedItems = [...itemsList].filter((item) => item.id !== id);
+    setItemsList(deletedItems);
+    localStorage.setItem("itemsList", JSON.stringify(deletedItems));
+  };
+
+  const packItemHandler = (id) => {
+    const packedItems = [...itemsList].map((item) => {
+      if (item.id === id) item.packed = item.packed === true ? false : true;
+      return item;
+    });
+    setItemsList(packedItems);
+    localStorage.setItem("itemsList", JSON.stringify(packedItems));
   };
   return (
     <div className="app">
       <Logo />
       <Form onAddItems={addItemHandler} />
-      <PackingList itemsList={itemsList} />
+      <PackingList
+        itemsList={itemsList}
+        onDeleteItem={deleteItemHandler}
+        onPackedItem={packItemHandler}
+      />
       <Stats itemsList={itemsList} />
     </div>
   );
@@ -46,56 +63,75 @@ const Form = ({ onAddItems }) => {
   return (
     <form className="add-form" onSubmit={submitHandler}>
       <h3>What do you need for your trip ?</h3>
-      <select value={quantity} onChange={(e) => setQuantity(+e.target.value)}>
-        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
-          <option key={num} value={num}>
-            {num}
-          </option>
-        ))}
-      </select>
-      <input
-        type="text"
-        placeholder="item.."
-        value={description}
-        onChange={(e) => setDecription(e.target.value)}
-      />
-      <button onClick={submitHandler}>Add</button>
+      <div>
+        <select value={quantity} onChange={(e) => setQuantity(+e.target.value)}>
+          {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+            <option key={num} value={num}>
+              {num}
+            </option>
+          ))}
+        </select>
+        <input
+          type="text"
+          placeholder="item.."
+          value={description}
+          onChange={(e) => setDecription(e.target.value)}
+        />
+        <button onClick={submitHandler}>Add</button>
+      </div>
     </form>
   );
 };
-const PackingList = ({ itemsList }) => {
+const PackingList = ({ itemsList, onDeleteItem, onPackedItem }) => {
   return (
     <div className="list">
       <ul>
         {itemsList.map((item) => {
-          return <Item key={item.id} item={item} />;
+          return (
+            <Item
+              key={item.id}
+              item={item}
+              onDeleteItem={onDeleteItem}
+              onPackedItem={onPackedItem}
+            />
+          );
         })}
       </ul>
     </div>
   );
 };
 
-const Item = ({ item }) => {
+const Item = ({ item, onDeleteItem, onPackedItem }) => {
   return (
-    <li onClick={(item) => console.log(item)}>
+    <li>
       <span
         style={
           item.packed ? { textDecoration: "line-through #212529 5px" } : {}
         }
+        onClick={() => onPackedItem(item.id)}
       >
         {item.quantity} {item.description}
       </span>
-      <button>&times;</button>
+      <button onClick={() => onDeleteItem(item.id)}>&times;</button>
     </li>
   );
 };
 
 const Stats = ({ itemsList }) => {
+  const packed = itemsList.filter((item) => item.packed === true);
   return (
     <footer className="stats">
       <p>
-        You have {itemsList.length} items on your list, and you already packed 4
-        (40%)
+        You have {itemsList.length} items on your list, and you{" "}
+        {packed.length > 0 ? (
+          <span>
+            already packed
+            {""} {packed.length} {packed.length > 1 ? "items" : "item"} {"  "}(
+            {Math.round((packed.length / itemsList.length) * 100) || 0}) %
+          </span>
+        ) : (
+          <span>haven't packed anything !</span>
+        )}
       </p>
     </footer>
   );
