@@ -109,7 +109,7 @@ input {
 .list ul {
   list-style: none;
   width: 90%;
-  height: 30vw;
+  height: 20vw;
   overflow: auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -142,6 +142,11 @@ input[type="checkbox"] {
   transform: translateY(2px);
 }
 
+.actions button:hover {
+  transition: all 0.3s ease-in;
+  color: #f8f1e2;
+  background-color: #212529;
+}
 .stats {
   text-align: center;
   padding: 1.2rem 0;
@@ -160,7 +165,7 @@ input[type="checkbox"] {
   }
 
   .list ul {
-    height: 60vh;
+    height: 50vh;
     gap: 1rem;
   }
 
