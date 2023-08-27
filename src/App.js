@@ -4,8 +4,8 @@ function App() {
   const [itemsList, setItemsList] = useState([]);
 
   useEffect(() => {
-    const storedItems = JSON.parse(localStorage.getItem("itemsList"));
-    setItemsList(storedItems);
+    const storedItems = JSON.parse(localStorage?.getItem("itemsList"));
+    setItemsList(storedItems ?? []);
   }, []);
 
   const addItemHandler = (item) => {
@@ -62,7 +62,7 @@ const Form = ({ onAddItems }) => {
 
   return (
     <form className="add-form" onSubmit={submitHandler}>
-      <h3>What do you need for your trip ?</h3>
+      <h3>What items are necessary for your journey?</h3>
       <div>
         <select value={quantity} onChange={(e) => setQuantity(+e.target.value)}>
           {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
