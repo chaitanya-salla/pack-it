@@ -69,13 +69,15 @@ input {
 }
 
 .add-form button {
+  background-color: #212529;
+  color: #f8f1e2;
   text-transform: uppercase;
   transition: all 0.3s ease-in;
 }
 
 .add-form button:hover {
-  background-color: #212529;
-  color: #f8f1e2;
+  background-color: #f8f1e2;
+  color: #212529;
 }
 
 .list {

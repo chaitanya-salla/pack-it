@@ -10,12 +10,17 @@ const initialItems = [
 ];
 
 function App() {
+  const [itemsList, setItemsList] = useState([]);
+  const addItemHandler = (item) => {
+    const updatedItems = [...itemsList, item];
+    setItemsList(updatedItems);
+  };
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
-      <Stats />
+      <Form onAddItems={addItemHandler} />
+      <PackingList itemsList={itemsList} />
+      <Stats itemsList={itemsList} />
     </div>
   );
 }
@@ -25,19 +30,17 @@ const Logo = () => {
 };
 
 // Form
-const Form = () => {
+const Form = ({ onAddItems }) => {
   const [description, setDecription] = useState("");
   const [quantity, setQuantity] = useState(5);
-  const [itemsList, setItemsList] = useState(initialItems);
 
   const submitHandler = (e) => {
     e.preventDefault();
     if (!description) return;
-    const newItem = { description, quantity, packed: false, id: Date.now() };
+    const newItem = { id: Date.now(), description, quantity, packed: false };
+    onAddItems(newItem);
     setDecription("");
     setQuantity(5);
-    itemsList.push(newItem);
-    setItemsList(itemsList);
   };
 
   return (
@@ -60,11 +63,11 @@ const Form = () => {
     </form>
   );
 };
-const PackingList = () => {
+const PackingList = ({ itemsList }) => {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => {
+        {itemsList.map((item) => {
           return <Item key={item.id} item={item} />;
         })}
       </ul>
@@ -74,7 +77,7 @@ const PackingList = () => {
 
 const Item = ({ item }) => {
   return (
-    <li>
+    <li onClick={(item) => console.log(item)}>
       <span
         style={
           item.packed ? { textDecoration: "line-through #212529 5px" } : {}
@@ -87,10 +90,13 @@ const Item = ({ item }) => {
   );
 };
 
-const Stats = () => {
+const Stats = ({ itemsList }) => {
   return (
     <footer className="stats">
-      <p>You have 10 items on your list, and you already packed 4 (40%)</p>
+      <p>
+        You have {itemsList.length} items on your list, and you already packed 4
+        (40%)
+      </p>
     </footer>
   );
 };
