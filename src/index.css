@@ -55,6 +55,7 @@ h1 {
 .add-form > div {
   display: flex;
   gap: 2rem;
+  margin-top: 1rem;
 }
 
 h3 {
@@ -143,4 +144,38 @@ input[type="checkbox"] {
 .stats {
   text-align: center;
   padding: 1.2rem 0;
+}
+
+/* Mobile Resonsive */
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  html {
+    font-size: 45%;
+  }
+
+  body {
+    font-size: 1 rem;
+  }
+
+  .list ul {
+    height: 60vh;
+    gap: 1rem;
+  }
+
+  .list li {
+    font-size: 20px;
+  }
+}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+}
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+}
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+}
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
 }
